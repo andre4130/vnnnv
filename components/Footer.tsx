@@ -15,6 +15,7 @@ export default function Footer() {
         borderTop: "1px solid",
         borderColor: "divider",
         py: 4,
+        bgcolor: "background.default",
       }}
     >
       <Container maxWidth="lg">

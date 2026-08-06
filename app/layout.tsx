@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Lato } from "next/font/google";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ThemeRegistry from "@/components/ThemeRegistry";
+import { getAllHeaderImages } from "@/lib/headerImages.server";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const lato = Lato({
+  variable: "--font-lato",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["300", "400", "700"],
 });
 
 export const metadata: Metadata = {
@@ -25,8 +22,10 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  const headerImages = getAllHeaderImages();
+
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    <html lang="en" className={lato.variable}>
       <body>
         <ThemeRegistry>
           <div
@@ -36,7 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               flexDirection: "column",
             }}
           >
-            <Header />
+            <Header images={headerImages} />
             <main style={{ flex: 1 }}>{children}</main>
             <Footer />
           </div>

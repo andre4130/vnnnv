@@ -1,72 +1,166 @@
-"use client";
+'use client';
 
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Box from '@mui/material/Box';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { getHeaderImagesForPath, pickRandom } from '@/lib/headerImages';
 
 const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Product", href: "/product" },
-  { label: "Visual", href: "/visual" },
-  { label: "About", href: "/about" },
+  { label: 'Product', href: '/product' },
+  { label: 'Visual', href: '/visual' },
+  { label: 'About', href: '/about' },
 ] as const;
 
-export default function Header() {
+type HeaderProps = {
+  images: readonly string[];
+};
+
+export default function Header({ images }: HeaderProps) {
   const pathname = usePathname();
+  const [backgroundSrc, setBackgroundSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    const pool = getHeaderImagesForPath(pathname, images);
+    setBackgroundSrc(pickRandom(pool));
+  }, [pathname, images]);
 
   return (
-    <AppBar position="sticky" color="inherit" elevation={0}>
-      <Container maxWidth="lg">
-        <Toolbar disableGutters sx={{ minHeight: { xs: 64, md: 72 } }}>
-          <Typography
+    <Box
+      component='header'
+      sx={{
+        position: 'relative',
+        width: '100%',
+        height: '100vh',
+        overflow: 'hidden',
+        bgcolor: '#000',
+      }}
+    >
+      {backgroundSrc ? (
+        <Image
+          src={backgroundSrc}
+          alt=''
+          fill
+          priority
+          sizes='100vw'
+          style={{ objectFit: 'cover', objectPosition: 'center' }}
+        />
+      ) : null}
+
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          bgcolor: 'rgba(0, 0, 0, 0.1)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          px: 2,
+        }}
+      >
+        <Box
+          sx={{
+            width: 'min(72vw, 520px)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            gap: { xs: 2, md: 2.5 },
+          }}
+        >
+          <Box
             component={Link}
-            href="/"
-            variant="h6"
+            href='/'
+            aria-label='vnnnv home'
             sx={{
-              flexGrow: 1,
-              textDecoration: "none",
-              color: "text.primary",
-              fontWeight: 700,
-              letterSpacing: "0.08em",
+              display: 'block',
+              lineHeight: 0,
+              textDecoration: 'none',
             }}
           >
-            VNNNV
-          </Typography>
-          <Box component="nav" sx={{ display: "flex", gap: { xs: 0.5, sm: 1 } }}>
-            {navItems.map((item) => {
-              const isActive =
-                item.href === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(item.href);
+            <Box
+              component='img'
+              src='/images/logo/vnnnv.svg'
+              alt='vnnnv'
+              sx={{
+                width: '100%',
+                height: 'auto',
+                display: 'block',
+              }}
+            />
+          </Box>
+
+          <Box
+            component='nav'
+            aria-label='Primary'
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: '1fr auto 1fr auto 1fr',
+              alignItems: 'center',
+              width: '100%',
+              fontFamily: 'var(--font-lato), Helvetica, Arial, sans-serif',
+            }}
+          >
+            {navItems.map((item, index) => {
+              const isActive = pathname.startsWith(item.href);
+              const justifySelf =
+                index === 0
+                  ? 'start'
+                  : index === navItems.length - 1
+                  ? 'end'
+                  : 'center';
 
               return (
-                <Button
-                  key={item.href}
-                  component={Link}
-                  href={item.href}
-                  color="inherit"
-                  sx={{
-                    color: isActive ? "text.primary" : "text.secondary",
-                    fontWeight: isActive ? 600 : 400,
-                    borderBottom: isActive
-                      ? "2px solid currentColor"
-                      : "2px solid transparent",
-                    borderRadius: 0,
-                    px: { xs: 1, sm: 1.5 },
-                  }}
-                >
-                  {item.label}
-                </Button>
+                <Box key={item.href} sx={{ display: 'contents' }}>
+                  {index > 0 ? (
+                    <Box
+                      component='span'
+                      aria-hidden
+                      sx={{
+                        color: '#fff',
+                        px: { xs: 0.5, sm: 1 },
+                        fontSize: { xs: '0.7rem', sm: '0.8rem' },
+                        letterSpacing: '0.12em',
+                        userSelect: 'none',
+                        textAlign: 'center',
+                      }}
+                    >
+                      ·
+                    </Box>
+                  ) : null}
+                  <Box
+                    component={Link}
+                    href={item.href}
+                    sx={{
+                      justifySelf,
+                      color: '#fff',
+                      textDecoration: 'none',
+                      textTransform: 'uppercase',
+                      fontWeight: isActive ? 700 : 400,
+                      fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.875rem' },
+                      letterSpacing: '0.18em',
+                      opacity: isActive ? 1 : 0.9,
+                      whiteSpace: 'nowrap',
+                      '&:hover': { opacity: 1 },
+                    }}
+                  >
+                    {item.label}
+                  </Box>
+                </Box>
               );
             })}
           </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+        </Box>
+      </Box>
+    </Box>
   );
 }

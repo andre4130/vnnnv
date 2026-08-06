@@ -3,6 +3,7 @@ import { Lato } from "next/font/google";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ThemeRegistry from "@/components/ThemeRegistry";
+import { getAllFooterImages } from "@/lib/footerImages.server";
 import { getAllHeaderImages } from "@/lib/headerImages.server";
 import "./globals.css";
 
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   const headerImages = getAllHeaderImages();
+  const footerImages = getAllFooterImages();
 
   return (
     <html lang="en" className={lato.variable}>
@@ -37,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           >
             <Header images={headerImages} />
             <main style={{ flex: 1 }}>{children}</main>
-            <Footer />
+            <Footer images={footerImages} />
           </div>
         </ThemeRegistry>
       </body>

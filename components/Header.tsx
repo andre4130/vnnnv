@@ -4,8 +4,10 @@ import Box from '@mui/material/Box';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { getHeaderImagesForPath, pickRandom } from '@/lib/headerImages';
+
+const FADE_MS = 500;
 
 const navItems = [
   { label: 'Product', href: '/product' },
@@ -17,13 +19,91 @@ type HeaderProps = {
   images: readonly string[];
 };
 
+function pickNextBackground(
+  pathname: string,
+  images: readonly string[],
+  current: string | null
+): string | null {
+  const pool = getHeaderImagesForPath(pathname, images);
+  if (pool.length === 0) {
+    return null;
+  }
+
+  if (current && pool.length > 1) {
+    const alternatives = pool.filter((src) => src !== current);
+    return pickRandom(alternatives.length > 0 ? alternatives : pool);
+  }
+
+  return pickRandom(pool);
+}
+
 export default function Header({ images }: HeaderProps) {
   const pathname = usePathname();
-  const [backgroundSrc, setBackgroundSrc] = useState<string | null>(null);
+  const [baseSrc, setBaseSrc] = useState<string | null>(null);
+  const [overlaySrc, setOverlaySrc] = useState<string | null>(null);
+  const [overlayOpaque, setOverlayOpaque] = useState(false);
+  const baseSrcRef = useRef<string | null>(null);
+  const pendingPathRef = useRef<string | null>(null);
+  const pendingSrcRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const pool = getHeaderImagesForPath(pathname, images);
-    setBackgroundSrc(pickRandom(pool));
+    let next: string | null = null;
+
+    if (pendingPathRef.current === pathname && pendingSrcRef.current) {
+      next = pendingSrcRef.current;
+    } else {
+      next = pickNextBackground(pathname, images, baseSrcRef.current);
+      pendingPathRef.current = pathname;
+      pendingSrcRef.current = next;
+    }
+
+    if (!next) {
+      return;
+    }
+
+    // First paint — no fade needed.
+    if (!baseSrcRef.current) {
+      baseSrcRef.current = next;
+      setBaseSrc(next);
+      return;
+    }
+
+    if (next === baseSrcRef.current) {
+      return;
+    }
+
+    let cancelled = false;
+
+    setOverlaySrc(next);
+    setOverlayOpaque(false);
+
+    let raf2 = 0;
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        if (!cancelled) {
+          setOverlayOpaque(true);
+        }
+      });
+    });
+
+    const timeout = window.setTimeout(() => {
+      if (cancelled) {
+        return;
+      }
+      baseSrcRef.current = next;
+      setBaseSrc(next);
+      setOverlaySrc(null);
+      setOverlayOpaque(false);
+    }, FADE_MS);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      window.clearTimeout(timeout);
+      setOverlaySrc(null);
+      setOverlayOpaque(false);
+    };
   }, [pathname, images]);
 
   return (
@@ -37,15 +117,35 @@ export default function Header({ images }: HeaderProps) {
         bgcolor: '#000',
       }}
     >
-      {backgroundSrc ? (
+      {baseSrc ? (
         <Image
-          src={backgroundSrc}
+          src={baseSrc}
           alt=''
           fill
           priority
           sizes='100vw'
           style={{ objectFit: 'cover', objectPosition: 'center' }}
         />
+      ) : null}
+
+      {overlaySrc ? (
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            opacity: overlayOpaque ? 1 : 0,
+            transition: `opacity ${FADE_MS}ms ease-in-out`,
+            pointerEvents: 'none',
+          }}
+        >
+          <Image
+            src={overlaySrc}
+            alt=''
+            fill
+            sizes='100vw'
+            style={{ objectFit: 'cover', objectPosition: 'center' }}
+          />
+        </Box>
       ) : null}
 
       <Box

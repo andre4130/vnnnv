@@ -48,7 +48,7 @@ export default function Footer({ images }: FooterProps) {
       sx={{
         position: "relative",
         width: "100%",
-        height: 200,
+        height: { xs: 120, sm: 200 },
         overflow: "hidden",
         bgcolor: "#000",
         mt: "auto",

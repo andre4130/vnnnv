@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { getHeaderImagesForPath, pickRandom } from '@/lib/headerImages';
 import { useMediaQuery } from '@mui/material';
 
@@ -52,6 +52,10 @@ export default function Header({ images: { mobile, desktop } }: HeaderProps) {
   const pendingSrcRef = useRef<string | null>(null);
 
   const images = isMobile ? mobile : desktop;
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   useEffect(() => {
     let next: string | null = null;
@@ -119,7 +123,7 @@ export default function Header({ images: { mobile, desktop } }: HeaderProps) {
       sx={{
         position: 'relative',
         width: '100%',
-        height: '100vh',
+        height: '100svh',
         overflow: 'hidden',
         bgcolor: '#000',
       }}
@@ -187,6 +191,7 @@ export default function Header({ images: { mobile, desktop } }: HeaderProps) {
           <Box
             component={Link}
             href='/'
+            scroll={false}
             aria-label='vnnnv home'
             sx={{
               display: 'block',
@@ -247,6 +252,7 @@ export default function Header({ images: { mobile, desktop } }: HeaderProps) {
                   <Box
                     component={Link}
                     href={item.href}
+                    scroll={false}
                     sx={{
                       justifySelf,
                       color: '#fff',

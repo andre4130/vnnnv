@@ -1,24 +1,24 @@
 function fileName(src: string): string {
-  return src.split("/").pop() ?? src;
+  return src.split('/').pop() ?? src;
 }
 
 export function getHeaderImagesForPath(
   pathname: string,
-  allImages: readonly string[],
+  allImages: readonly string[]
 ): string[] {
-  if (pathname.startsWith("/product")) {
+  if (pathname.startsWith('/product')) {
     return allImages.filter((src) =>
-      fileName(src).toUpperCase().startsWith("PRODUCT_"),
+      fileName(src).toUpperCase().startsWith('PRODUCT_')
     );
   }
-  if (pathname.startsWith("/visual")) {
+  if (pathname.startsWith('/visual')) {
     return allImages.filter((src) =>
-      fileName(src).toUpperCase().startsWith("VISUAL_"),
+      fileName(src).toUpperCase().startsWith('VISUAL_')
     );
   }
-  if (pathname.startsWith("/about")) {
+  if (pathname.startsWith('/about')) {
     return allImages.filter((src) =>
-      fileName(src).toUpperCase().startsWith("ABOUT_"),
+      fileName(src).toUpperCase().startsWith('ABOUT_')
     );
   }
   return [...allImages];

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { getHeaderImagesForPath, pickRandom } from '@/lib/headerImages';
+import { useMediaQuery } from '@mui/material';
 
 const FADE_MS = 500;
 
@@ -16,7 +17,10 @@ const navItems = [
 ] as const;
 
 type HeaderProps = {
-  images: readonly string[];
+  images: {
+    mobile: readonly string[];
+    desktop: readonly string[];
+  };
 };
 
 function pickNextBackground(
@@ -37,14 +41,17 @@ function pickNextBackground(
   return pickRandom(pool);
 }
 
-export default function Header({ images }: HeaderProps) {
+export default function Header({ images: { mobile, desktop } }: HeaderProps) {
   const pathname = usePathname();
+  const isMobile = useMediaQuery('(max-width: 600px)');
   const [baseSrc, setBaseSrc] = useState<string | null>(null);
   const [overlaySrc, setOverlaySrc] = useState<string | null>(null);
   const [overlayOpaque, setOverlayOpaque] = useState(false);
   const baseSrcRef = useRef<string | null>(null);
   const pendingPathRef = useRef<string | null>(null);
   const pendingSrcRef = useRef<string | null>(null);
+
+  const images = isMobile ? mobile : desktop;
 
   useEffect(() => {
     let next: string | null = null;

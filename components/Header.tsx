@@ -81,9 +81,10 @@ export default function Header({ backgroundSrc }: HeaderProps) {
       sx={{
         position: 'relative',
         width: '100%',
-        height: '100vh',
+        height: pathname !== '/' ? '96vh' : '100vh',
         overflow: 'hidden',
         bgcolor: '#000',
+        transition: 'height 0.3s ease-in-out',
       }}
     >
       {baseSrc ? (
@@ -143,6 +144,7 @@ export default function Header({ backgroundSrc }: HeaderProps) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'stretch',
+            justifyContent: 'center',
             gap: { xs: 2, md: 2.5 },
           }}
         >
@@ -151,9 +153,22 @@ export default function Header({ backgroundSrc }: HeaderProps) {
             href='/'
             aria-label='vnnnv home'
             sx={{
+              position: 'relative',
               display: 'block',
               lineHeight: 0,
               textDecoration: 'none',
+              outline: 'none',
+              '&:focus-visible::after': {
+                content: '""',
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                top: '50%',
+                height: '2px',
+                bgcolor: '#fff',
+                transform: 'translateY(-50%)',
+                pointerEvents: 'none',
+              },
             }}
           >
             <Box
@@ -162,6 +177,7 @@ export default function Header({ backgroundSrc }: HeaderProps) {
               alt='vnnnv'
               sx={{
                 width: '100%',
+                maxWidth: '520px',
                 height: 'auto',
                 display: 'block',
               }}
@@ -175,7 +191,8 @@ export default function Header({ backgroundSrc }: HeaderProps) {
               display: 'grid',
               gridTemplateColumns: '1fr auto 1fr auto 1fr',
               alignItems: 'center',
-              width: '100%',
+              alignSelf: 'center',
+              width: '64%',
               fontFamily: 'var(--font-lato), Helvetica, Arial, sans-serif',
             }}
           >
@@ -185,8 +202,8 @@ export default function Header({ backgroundSrc }: HeaderProps) {
                 index === 0
                   ? 'start'
                   : index === navItems.length - 1
-                    ? 'end'
-                    : 'center';
+                  ? 'end'
+                  : 'center';
 
               return (
                 <Box key={item.href} sx={{ display: 'contents' }}>
@@ -219,7 +236,11 @@ export default function Header({ backgroundSrc }: HeaderProps) {
                       letterSpacing: '0.18em',
                       opacity: isActive ? 1 : 0.9,
                       whiteSpace: 'nowrap',
+                      outline: 'none',
                       '&:hover': { opacity: 1 },
+                      '&:focus-visible': {
+                        textDecoration: 'line-through',
+                      },
                     }}
                   >
                     {item.label}

@@ -3,8 +3,6 @@
 import Box from '@mui/material/Box';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { pickRandom } from '@/lib/headerImages';
 
 const textSx = {
   color: '#fff',
@@ -23,20 +21,12 @@ const linkSx = {
 } as const;
 
 type FooterProps = {
-  images: readonly string[];
+  backgroundSrc: string | null;
 };
 
-export default function Footer({ images }: FooterProps) {
+export default function Footer({ backgroundSrc }: FooterProps) {
   const pathname = usePathname();
-  const [backgroundSrc, setBackgroundSrc] = useState<string | null>(null);
   const isHome = pathname === '/';
-
-  useEffect(() => {
-    if (isHome) {
-      return;
-    }
-    setBackgroundSrc(pickRandom(images));
-  }, [images, isHome]);
 
   if (isHome) {
     return null;

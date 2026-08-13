@@ -1,12 +1,9 @@
 import type { Metadata } from 'next';
 import { Lato } from 'next/font/google';
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
+import SiteChrome from '@/components/SiteChrome';
 import ThemeRegistry from '@/components/ThemeRegistry';
-import { getAllFooterImages } from '@/lib/footerImages.server';
 import { getAllHeaderImages } from '@/lib/headerImages.server';
 import './globals.css';
-import { useMediaQuery } from '@mui/material';
 
 const lato = Lato({
   variable: '--font-lato',
@@ -24,12 +21,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
-  const footerImages = getAllFooterImages();
-
-  const headerImages = {
-    mobile: getAllHeaderImages({ isMobile: true }),
-    desktop: getAllHeaderImages({ isMobile: false }),
-  };
+  const images = getAllHeaderImages();
 
   return (
     <html lang='en' className={lato.variable}>
@@ -42,9 +34,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
               flexDirection: 'column',
             }}
           >
-            <Header images={headerImages} />
-            <main style={{ flex: 1 }}>{children}</main>
-            <Footer images={footerImages} />
+            <SiteChrome images={images}>{children}</SiteChrome>
           </div>
         </ThemeRegistry>
       </body>

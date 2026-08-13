@@ -1,16 +1,15 @@
-import type { Metadata } from "next";
-import PageShell from "@/components/PageShell";
+import type { Metadata } from 'next';
+import { getGalleryImages, packGalleryRows } from '@/lib/galleryImages.server';
+import ImageGallery from '@/components/ImageGallery';
 
 export const metadata: Metadata = {
-  title: "Product",
-  description: "Product photography and design work.",
+  title: 'Product',
+  description: 'Product photography and design work.',
 };
 
-export default function ProductPage() {
-  return (
-    <PageShell
-      title="Product"
-      description="Placeholder for product photography and design projects. Gallery and case studies will be added here."
-    />
-  );
+export default async function ProductPage() {
+  const images = await getGalleryImages('product');
+  const rows = packGalleryRows(images);
+
+  return <ImageGallery rows={rows} />;
 }

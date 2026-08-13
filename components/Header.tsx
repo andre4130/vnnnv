@@ -4,88 +4,46 @@ import Box from '@mui/material/Box';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { getHeaderImagesForPath, pickRandom } from '@/lib/headerImages';
-import { useMediaQuery } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
 
 const FADE_MS = 500;
 
 const navItems = [
-  { label: 'Product', href: '/product' },
   { label: 'Visual', href: '/visual' },
+  { label: 'Product', href: '/product' },
   { label: 'About', href: '/about' },
 ] as const;
 
 type HeaderProps = {
-  images: {
-    mobile: readonly string[];
-    desktop: readonly string[];
-  };
+  backgroundSrc: string | null;
 };
 
-function pickNextBackground(
-  pathname: string,
-  images: readonly string[],
-  current: string | null
-): string | null {
-  const pool = getHeaderImagesForPath(pathname, images);
-  if (pool.length === 0) {
-    return null;
-  }
-
-  if (current && pool.length > 1) {
-    const alternatives = pool.filter((src) => src !== current);
-    return pickRandom(alternatives.length > 0 ? alternatives : pool);
-  }
-
-  return pickRandom(pool);
-}
-
-export default function Header({ images: { mobile, desktop } }: HeaderProps) {
+export default function Header({ backgroundSrc }: HeaderProps) {
   const pathname = usePathname();
-  const isMobile = useMediaQuery('(max-width: 600px)');
   const [baseSrc, setBaseSrc] = useState<string | null>(null);
   const [overlaySrc, setOverlaySrc] = useState<string | null>(null);
   const [overlayOpaque, setOverlayOpaque] = useState(false);
   const baseSrcRef = useRef<string | null>(null);
-  const pendingPathRef = useRef<string | null>(null);
-  const pendingSrcRef = useRef<string | null>(null);
-
-  const images = isMobile ? mobile : desktop;
-
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
 
   useEffect(() => {
-    let next: string | null = null;
-
-    if (pendingPathRef.current === pathname && pendingSrcRef.current) {
-      next = pendingSrcRef.current;
-    } else {
-      next = pickNextBackground(pathname, images, baseSrcRef.current);
-      pendingPathRef.current = pathname;
-      pendingSrcRef.current = next;
-    }
-
-    if (!next) {
+    if (!backgroundSrc) {
       return;
     }
 
     // First paint — no fade needed.
     if (!baseSrcRef.current) {
-      baseSrcRef.current = next;
-      setBaseSrc(next);
+      baseSrcRef.current = backgroundSrc;
+      setBaseSrc(backgroundSrc);
       return;
     }
 
-    if (next === baseSrcRef.current) {
+    if (backgroundSrc === baseSrcRef.current) {
       return;
     }
 
     let cancelled = false;
 
-    setOverlaySrc(next);
+    setOverlaySrc(backgroundSrc);
     setOverlayOpaque(false);
 
     let raf2 = 0;
@@ -101,8 +59,8 @@ export default function Header({ images: { mobile, desktop } }: HeaderProps) {
       if (cancelled) {
         return;
       }
-      baseSrcRef.current = next;
-      setBaseSrc(next);
+      baseSrcRef.current = backgroundSrc;
+      setBaseSrc(backgroundSrc);
       setOverlaySrc(null);
       setOverlayOpaque(false);
     }, FADE_MS);
@@ -115,7 +73,7 @@ export default function Header({ images: { mobile, desktop } }: HeaderProps) {
       setOverlaySrc(null);
       setOverlayOpaque(false);
     };
-  }, [pathname, images]);
+  }, [backgroundSrc]);
 
   return (
     <Box
@@ -123,7 +81,7 @@ export default function Header({ images: { mobile, desktop } }: HeaderProps) {
       sx={{
         position: 'relative',
         width: '100%',
-        height: '100svh',
+        height: '100vh',
         overflow: 'hidden',
         bgcolor: '#000',
       }}
@@ -191,7 +149,6 @@ export default function Header({ images: { mobile, desktop } }: HeaderProps) {
           <Box
             component={Link}
             href='/'
-            scroll={false}
             aria-label='vnnnv home'
             sx={{
               display: 'block',
@@ -228,8 +185,8 @@ export default function Header({ images: { mobile, desktop } }: HeaderProps) {
                 index === 0
                   ? 'start'
                   : index === navItems.length - 1
-                  ? 'end'
-                  : 'center';
+                    ? 'end'
+                    : 'center';
 
               return (
                 <Box key={item.href} sx={{ display: 'contents' }}>
@@ -252,7 +209,6 @@ export default function Header({ images: { mobile, desktop } }: HeaderProps) {
                   <Box
                     component={Link}
                     href={item.href}
-                    scroll={false}
                     sx={{
                       justifySelf,
                       color: '#fff',

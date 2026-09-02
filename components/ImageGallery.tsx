@@ -16,24 +16,22 @@ const GAP = { xs: 1, md: 2 };
 function imageSizes(type: GalleryRow['type'], image: GalleryImage) {
   if (type === 'landscape') return '100vw';
   if (type === 'mixed') {
-    return image.orientation === 'portrait'
-      ? '(max-width: 900px) 100vw, 33vw'
-      : '(max-width: 900px) 100vw, 66vw';
+    return image.orientation === 'portrait' ? '33vw' : '66vw';
   }
-  return '(max-width: 900px) 100vw, 33vw';
+  return '33vw';
 }
 
 function ChevronLeftIcon() {
   return (
     <Box
-      component="svg"
-      viewBox="0 0 24 24"
+      component='svg'
+      viewBox='0 0 24 24'
       aria-hidden
       sx={{ width: 28, height: 28, display: 'block' }}
     >
       <path
-        fill="currentColor"
-        d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"
+        fill='currentColor'
+        d='M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z'
       />
     </Box>
   );
@@ -42,14 +40,14 @@ function ChevronLeftIcon() {
 function ChevronRightIcon() {
   return (
     <Box
-      component="svg"
-      viewBox="0 0 24 24"
+      component='svg'
+      viewBox='0 0 24 24'
       aria-hidden
       sx={{ width: 28, height: 28, display: 'block' }}
     >
       <path
-        fill="currentColor"
-        d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"
+        fill='currentColor'
+        d='M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z'
       />
     </Box>
   );
@@ -58,14 +56,14 @@ function ChevronRightIcon() {
 function CloseIcon() {
   return (
     <Box
-      component="svg"
-      viewBox="0 0 24 24"
+      component='svg'
+      viewBox='0 0 24 24'
       aria-hidden
       sx={{ width: 24, height: 24, display: 'block' }}
     >
       <path
-        fill="currentColor"
-        d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+        fill='currentColor'
+        d='M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'
       />
     </Box>
   );
@@ -126,8 +124,8 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
   return (
     <>
       <Box
-        component="section"
-        aria-label="Image gallery"
+        component='section'
+        aria-label='Image gallery'
         sx={{
           width: '100%',
           display: 'flex',
@@ -148,7 +146,7 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
                 isMixed
                   ? {
                       display: 'flex',
-                      flexDirection: { xs: 'column', md: 'row' },
+                      flexDirection: 'row',
                       alignItems: 'stretch',
                       gap: GAP,
                       width: '100%',
@@ -157,7 +155,7 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
                       display: 'grid',
                       gridTemplateColumns: isLandscape
                         ? '1fr'
-                        : { xs: '1fr', md: 'repeat(3, 1fr)' },
+                        : 'repeat(3, 1fr)',
                       gap: GAP,
                       width: '100%',
                     }
@@ -171,10 +169,10 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
                 return (
                   <Box
                     key={image.src}
-                    component="button"
-                    type="button"
+                    component='button'
+                    type='button'
                     onClick={() => setActiveIndex(flatIndex)}
-                    aria-label="Open image"
+                    aria-label='Open image'
                     sx={{
                       position: 'relative',
                       width: '100%',
@@ -187,19 +185,14 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
                       color: 'inherit',
                       ...(isMixed
                         ? {
-                            flex: {
-                              md:
-                                image.orientation === 'portrait'
-                                  ? '1 1 0'
-                                  : '2 1 0',
-                            },
+                            flex:
+                              image.orientation === 'portrait'
+                                ? '1 1 0'
+                                : '2 1 0',
                             aspectRatio: landscapeInMixed
-                              ? {
-                                  xs: `${image.width} / ${image.height}`,
-                                  md: 'unset',
-                                }
+                              ? 'unset'
                               : `${image.width} / ${image.height}`,
-                            minHeight: landscapeInMixed ? { md: 0 } : undefined,
+                            minHeight: landscapeInMixed ? 0 : undefined,
                           }
                         : {
                             aspectRatio: `${image.width} / ${image.height}`,
@@ -208,7 +201,7 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
                   >
                     <Image
                       src={image.src}
-                      alt=""
+                      alt=''
                       fill
                       sizes={imageSizes(row.type, image)}
                       priority={isFirstRow}
@@ -254,7 +247,7 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
           }}
         >
           <IconButton
-            aria-label="Close"
+            aria-label='Close'
             onClick={close}
             sx={{
               position: 'absolute',
@@ -272,7 +265,7 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
           {images.length > 1 && (
             <>
               <IconButton
-                aria-label="Previous image"
+                aria-label='Previous image'
                 onClick={showPrev}
                 sx={{
                   position: 'absolute',
@@ -286,7 +279,7 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
                 <ChevronLeftIcon />
               </IconButton>
               <IconButton
-                aria-label="Next image"
+                aria-label='Next image'
                 onClick={showNext}
                 sx={{
                   position: 'absolute',
@@ -314,9 +307,9 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
             >
               <Image
                 src={activeImage.src}
-                alt=""
+                alt=''
                 fill
-                sizes="100vw"
+                sizes='100vw'
                 priority
                 style={{ objectFit: 'contain' }}
               />
@@ -325,7 +318,7 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
 
           {activeIndex !== null && images.length > 0 && (
             <Box
-              component="span"
+              component='span'
               sx={{
                 position: 'absolute',
                 bottom: 12,

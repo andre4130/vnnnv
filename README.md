@@ -10,12 +10,12 @@ Portfolio site for a graphic designer / photographer.
 
 ## Pages
 
-| Route | Page |
-|-------|------|
-| `/` | Home |
+| Route      | Page    |
+| ---------- | ------- |
+| `/`        | Home    |
 | `/product` | Product |
-| `/visual` | Visual |
-| `/about` | About |
+| `/visual`  | Visual  |
+| `/about`   | About   |
 
 Shared `Header` and `Footer` wrap every page via the root layout.
 
@@ -58,3 +58,9 @@ netlify deploy --build --prod
 ## Design notes
 
 Pages start as structured placeholders. Theme tokens live in `app/theme.ts` and will be refined as the visual design is defined.
+
+TODO (02/09/2026)
+
+- mobile: mismo order, verticals 2x2 / 3x3 (check how it looks)
+- desktop: 3x3 (verticales)
+-

@@ -145,7 +145,7 @@ export default function Header({ backgroundSrc }: HeaderProps) {
             flexDirection: 'column',
             alignItems: 'stretch',
             justifyContent: 'center',
-            gap: { xs: 2, md: 2.5 },
+            gap: { xs: 1, md: 1 },
           }}
         >
           <Box
@@ -232,8 +232,8 @@ export default function Header({ backgroundSrc }: HeaderProps) {
                       textDecoration: 'none',
                       textTransform: 'uppercase',
                       fontWeight: isActive ? 700 : 400,
-                      fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.875rem' },
-                      letterSpacing: '0.18em',
+                      fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.85rem' },
+                      letterSpacing: '0.48em',
                       opacity: isActive ? 1 : 0.9,
                       whiteSpace: 'nowrap',
                       outline: 'none',

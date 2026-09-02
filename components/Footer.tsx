@@ -7,9 +7,9 @@ import { usePathname } from 'next/navigation';
 const textSx = {
   color: '#fff',
   fontFamily: 'var(--font-lato), Helvetica, Arial, sans-serif',
-  fontSize: { xs: '0.55rem', sm: '0.7rem', md: '0.875rem' },
-  letterSpacing: '0.18em',
-  lineHeight: 1.7,
+  fontSize: { xs: '0.45rem', sm: '0.6rem', md: '0.65rem' },
+  letterSpacing: '0.6em',
+  lineHeight: 2.2,
   m: 0,
 } as const;
 
@@ -38,8 +38,8 @@ export default function Footer({ backgroundSrc }: FooterProps) {
       sx={{
         position: 'relative',
         width: '100%',
-        height: { xs: 180, sm: 200 },
-        minHeight: { xs: 180, sm: 200 },
+        height: { xs: 200, sm: 220 },
+        minHeight: { xs: 200, sm: 220 },
         overflow: 'hidden',
         bgcolor: '#000',
         mt: 'auto',
@@ -87,7 +87,7 @@ export default function Footer({ backgroundSrc }: FooterProps) {
           }}
         >
           <Box component='p' sx={textSx}>
-            Noe Lamas
+            NOE LAMAS
           </Box>
           <Box
             component='p'
@@ -113,7 +113,10 @@ export default function Footer({ backgroundSrc }: FooterProps) {
           sx={{
             flexShrink: 0,
             width: { xs: 'min(42vw, 140px)', sm: 'min(28vw, 180px)' },
-            lineHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: { xs: 1, sm: 1.25 },
           }}
         >
           <Box
@@ -124,6 +127,7 @@ export default function Footer({ backgroundSrc }: FooterProps) {
               width: '100%',
               height: 'auto',
               display: 'block',
+              lineHeight: 0,
             }}
           />
         </Box>
@@ -157,7 +161,7 @@ export default function Footer({ backgroundSrc }: FooterProps) {
             sx={{
               ...linkSx,
               display: { xs: 'inline', sm: 'block' },
-              textTransform: 'none',
+              textTransform: 'uppercase',
             }}
           >
             noelamasalonso@gmail.com

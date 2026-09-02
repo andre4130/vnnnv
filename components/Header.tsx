@@ -237,7 +237,10 @@ export default function Header({ backgroundSrc }: HeaderProps) {
                       opacity: isActive ? 1 : 0.9,
                       whiteSpace: 'nowrap',
                       outline: 'none',
-                      '&:hover': { opacity: 1 },
+                      '&:hover': {
+                        opacity: 1,
+                        textDecoration: 'line-through',
+                      },
                       '&:focus-visible': {
                         textDecoration: 'line-through',
                       },

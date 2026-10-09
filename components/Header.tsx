@@ -14,6 +14,26 @@ const navItems = [
   { label: 'About', href: '/about' },
 ] as const;
 
+const desktopServiceGroups = [
+  ['Creative Direction', 'Branding'],
+  ['Design', 'Illustration'],
+  ['Photography', 'Filmmaking'],
+] as const;
+
+const desktopMetaSx = {
+  m: 0,
+  color: '#fff',
+  fontFamily: 'var(--font-lato), Helvetica, Arial, sans-serif',
+  fontSize: { lg: '0.68rem', xl: '0.75rem' },
+  fontWeight: 400,
+  letterSpacing: '0.34em',
+  lineHeight: 1.85,
+  textTransform: 'uppercase',
+  whiteSpace: 'nowrap',
+  // Trailing letter-spacing would shove the row off its column edge.
+  marginRight: '-0.34em',
+} as const;
+
 type HeaderProps = {
   backgroundSrc: string | null;
 };
@@ -129,6 +149,81 @@ export default function Header({ backgroundSrc }: HeaderProps) {
 
       <Box
         sx={{
+          display: { xs: 'none', lg: 'grid' },
+          position: 'absolute',
+          zIndex: 2,
+          top: 0,
+          left: 0,
+          right: 0,
+          gridTemplateColumns: '1.15fr 0.9fr 1.05fr auto',
+          alignItems: 'center',
+          columnGap: { lg: 3, xl: 5 },
+          px: { lg: 5, xl: 7 },
+          pt: { lg: 2, xl: 3.5 },
+          pointerEvents: 'none',
+        }}
+      >
+        {desktopServiceGroups.map((lines) => (
+          <Box key={lines[0]}>
+            {lines.map((line) => (
+              <Box
+                key={line}
+                component='p'
+                sx={{
+                  ...desktopMetaSx,
+                  display: 'flex',
+                  alignItems: 'baseline',
+                  gap: '0.7em',
+                }}
+              >
+                <Box
+                  component='span'
+                  aria-hidden
+                  sx={{ letterSpacing: 0, marginRight: 0 }}
+                >
+                  ·
+                </Box>
+                {line}
+              </Box>
+            ))}
+          </Box>
+        ))}
+
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: { lg: 1.75, xl: 2.25 },
+            justifySelf: 'end',
+          }}
+        >
+          <Box sx={{ textAlign: 'right' }}>
+            <Box component='p' sx={desktopMetaSx}>
+              Noe Lamas
+            </Box>
+            <Box component='p' sx={desktopMetaSx}>
+              08019 BCN
+            </Box>
+          </Box>
+          <Box
+            aria-hidden
+            sx={{
+              width: { lg: 52, xl: 60 },
+              aspectRatio: '1',
+              flexShrink: 0,
+              bgcolor: '#fff',
+              maskImage: 'url(/images/logo/n.svg)',
+              maskMode: 'luminance',
+              maskSize: 'contain',
+              maskRepeat: 'no-repeat',
+              maskPosition: 'center',
+            }}
+          />
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
           position: 'relative',
           zIndex: 1,
           height: '100%',
@@ -188,11 +283,18 @@ export default function Header({ backgroundSrc }: HeaderProps) {
             component='nav'
             aria-label='Primary'
             sx={{
-              display: 'grid',
-              gridTemplateColumns: '1fr auto 1fr auto 1fr',
+              // Below md the tracked labels are wider than 64% of the logo,
+              // so a fixed grid overflows to the right. Size to the text and
+              // center that group. From md up, spread the labels under the logo.
+              display: { xs: 'flex', md: 'grid' },
+              gridTemplateColumns: {
+                md: 'minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr)',
+              },
               alignItems: 'center',
+              justifyContent: 'center',
               alignSelf: 'center',
-              width: '64%',
+              width: { xs: 'max-content', md: '64%' },
+              maxWidth: '100%',
               fontFamily: 'var(--font-lato), Helvetica, Arial, sans-serif',
             }}
           >
@@ -234,6 +336,9 @@ export default function Header({ backgroundSrc }: HeaderProps) {
                       fontWeight: isActive ? 700 : 400,
                       fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.85rem' },
                       letterSpacing: '0.48em',
+                      // Trailing letter-spacing sits outside the glyphs and
+                      // shifts the row off center.
+                      marginRight: '-0.48em',
                       opacity: isActive ? 1 : 0.9,
                       whiteSpace: 'nowrap',
                       outline: 'none',

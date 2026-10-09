@@ -21,10 +21,7 @@ export function getHeaderImagesForPath(
       fileName(src).toUpperCase().startsWith('ABOUT_')
     );
   }
-  // Home (`/`) and any unmatched routes use HOME_* only.
-  return allImages.filter((src) =>
-    fileName(src).toUpperCase().startsWith('HOME_')
-  );
+  return [];
 }
 
 export function pickRandom(images: readonly string[]): string | null {

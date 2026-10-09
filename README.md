@@ -10,12 +10,12 @@ Portfolio site for a graphic designer / photographer.
 
 ## Pages
 
-| Route      | Page    |
-| ---------- | ------- |
-| `/`        | Home    |
-| `/product` | Product |
-| `/visual`  | Visual  |
-| `/about`   | About   |
+| Route      | Page                                      |
+| ---------- | ----------------------------------------- |
+| `/`        | Redirects to `/visual`                    |
+| `/visual`  | Visual (landing)                          |
+| `/product` | Product                                   |
+| `/about`   | About                                     |
 
 Shared `Header` and `Footer` wrap every page via the root layout.
 

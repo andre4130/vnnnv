@@ -1,27 +1,32 @@
-"use client";
+'use client';
 
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
 
 type PageShellProps = {
   title: string;
-  description: string;
+  description: string | React.ReactNode;
 };
 
 export default function PageShell({ title, description }: PageShellProps) {
   return (
-    <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 } }}>
+    <Container maxWidth='lg' sx={{ py: { xs: 6, md: 10 } }}>
       <Box sx={{ maxWidth: 720 }}>
         <Typography
-          component="h1"
-          variant="h2"
+          component='h1'
+          variant='h2'
           gutterBottom
-          sx={{ fontSize: { xs: "2.25rem", md: "3rem" } }}
+          sx={{ fontSize: { xs: '2.25rem', md: '3rem' } }}
         >
           {title}
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ fontSize: "1.125rem" }}>
+        <Typography
+          component='div'
+          variant='body1'
+          color='text.secondary'
+          sx={{ fontSize: '1.125rem' }}
+        >
           {description}
         </Typography>
       </Box>

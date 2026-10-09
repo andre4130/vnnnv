@@ -2,7 +2,6 @@
 
 import Box from '@mui/material/Box';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
 
 const textSx = {
   color: '#fff',
@@ -25,13 +24,6 @@ type FooterProps = {
 };
 
 export default function Footer({ backgroundSrc }: FooterProps) {
-  const pathname = usePathname();
-  const isHome = pathname === '/';
-
-  if (isHome) {
-    return null;
-  }
-
   return (
     <Box
       component='footer'
@@ -112,22 +104,47 @@ export default function Footer({ backgroundSrc }: FooterProps) {
         <Box
           sx={{
             flexShrink: 0,
-            width: { xs: 'min(42vw, 140px)', sm: 'min(28vw, 180px)' },
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'row',
             alignItems: 'center',
             gap: { xs: 1, sm: 1.25 },
           }}
         >
           <Box
             component='img'
+            src='/images/header_and_footer/TRIANGULO.png'
+            alt=''
+            aria-hidden
+            sx={{
+              width: { xs: 16, sm: 20, md: 24 },
+              height: 'auto',
+              display: 'block',
+              transform: 'rotate(180deg)',
+              flexShrink: 0,
+            }}
+          />
+          <Box
+            component='img'
             src='/images/logo/vnnnv.svg'
             alt='vnnnv'
             sx={{
-              width: '100%',
+              width: { xs: 'min(42vw, 140px)', sm: 'min(28vw, 180px)' },
               height: 'auto',
               display: 'block',
               lineHeight: 0,
+            }}
+          />
+          <Box
+            component='img'
+            src='/images/header_and_footer/TRIANGULO.png'
+            alt=''
+            aria-hidden
+            sx={{
+              width: { xs: 16, sm: 20, md: 24 },
+              height: 'auto',
+              display: 'block',
+              transform: 'rotate(180deg)',
+              flexShrink: 0,
             }}
           />
         </Box>

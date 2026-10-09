@@ -3,7 +3,10 @@ import 'server-only';
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
-import type { GalleryImage } from '@/lib/galleryImages';
+import {
+  parseProductGroup,
+  type GalleryImage,
+} from '@/lib/galleryImages';
 
 export type {
   GalleryImage,
@@ -11,7 +14,7 @@ export type {
   GalleryRow,
   GalleryRowType,
 } from '@/lib/galleryImages';
-export { packGalleryRows } from '@/lib/galleryImages';
+export { packGalleryRows, PRODUCT_GROUP_COPY } from '@/lib/galleryImages';
 
 const IMAGE_EXT = /\.(jpe?g|png|webp|avif|gif)$/i;
 const DUPLICATE_SUFFIX = / \d+\./; // e.g. "PHOTO RIDING_56 2.jpg"
@@ -51,11 +54,14 @@ export async function getGalleryImages(
       continue;
     }
 
+    const group = parseProductGroup(file);
+
     images.push({
       src: encodePublicPath(folder, file),
       width,
       height,
       orientation: width >= height ? 'landscape' : 'portrait',
+      ...(group ? { group } : {}),
     });
   }
 

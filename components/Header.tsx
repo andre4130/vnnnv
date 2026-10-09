@@ -81,7 +81,7 @@ export default function Header({ backgroundSrc }: HeaderProps) {
       sx={{
         position: 'relative',
         width: '100%',
-        height: pathname !== '/' ? '96vh' : '100vh',
+        height: '99vh',
         overflow: 'hidden',
         bgcolor: '#000',
         transition: 'height 0.3s ease-in-out',
@@ -150,8 +150,8 @@ export default function Header({ backgroundSrc }: HeaderProps) {
         >
           <Box
             component={Link}
-            href='/'
-            aria-label='vnnnv home'
+            href='/visual'
+            aria-label='vnnnv'
             sx={{
               position: 'relative',
               display: 'block',
@@ -252,6 +252,20 @@ export default function Header({ backgroundSrc }: HeaderProps) {
               );
             })}
           </Box>
+
+          <Box
+            component='img'
+            src='/images/header_and_footer/TRIANGULO.png'
+            alt=''
+            aria-hidden
+            sx={{
+              width: { xs: 36, sm: 48, md: 64 },
+              height: 'auto',
+              display: 'block',
+              alignSelf: 'center',
+              mt: { xs: 0.5, md: 0.75 },
+            }}
+          />
         </Box>
       </Box>
     </Box>

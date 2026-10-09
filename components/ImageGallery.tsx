@@ -5,20 +5,31 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import IconButton from '@mui/material/IconButton';
-import type { GalleryImage, GalleryRow } from '@/lib/galleryImages';
+import Typography from '@mui/material/Typography';
+import type {
+  GalleryImage,
+  GalleryRow,
+  GalleryRowType,
+} from '@/lib/galleryImages';
 
 type ImageGalleryProps = {
   rows: GalleryRow[];
 };
 
+type ImageRow = Extract<GalleryRow, { images: GalleryImage[] }>;
+
 const GAP = { xs: 1, md: 2 };
 
-function imageSizes(type: GalleryRow['type'], image: GalleryImage) {
+function imageSizes(type: GalleryRowType, image: GalleryImage) {
   if (type === 'landscape') return '100vw';
   if (type === 'mixed') {
     return image.orientation === 'portrait' ? '33vw' : '66vw';
   }
   return '33vw';
+}
+
+function isImageRow(row: GalleryRow): row is ImageRow {
+  return row.type !== 'header';
 }
 
 function ChevronLeftIcon() {
@@ -70,7 +81,10 @@ function CloseIcon() {
 }
 
 export default function ImageGallery({ rows }: ImageGalleryProps) {
-  const images = useMemo(() => rows.flatMap((row) => row.images), [rows]);
+  const images = useMemo(
+    () => rows.filter(isImageRow).flatMap((row) => row.images),
+    [rows]
+  );
   const indexBySrc = useMemo(() => {
     const map = new Map<string, number>();
     images.forEach((image, index) => map.set(image.src, index));
@@ -121,6 +135,8 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
     return null;
   }
 
+  const firstImageRowIndex = rows.findIndex(isImageRow);
+
   return (
     <>
       <Box
@@ -135,7 +151,73 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
         }}
       >
         {rows.map((row, rowIndex) => {
-          const isFirstRow = rowIndex === 0;
+          if (row.type === 'header') {
+            return (
+              <Box
+                key={`header-${row.title}-${rowIndex}`}
+                component='header'
+                sx={{
+                  width: '100%',
+                  pt: { xs: 4, md: 6 },
+                  pb: { xs: 0.5, md: 1 },
+                }}
+              >
+                <Box
+                  component='div'
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 1.5,
+                    width: '100%',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Typography
+                    component='h2'
+                    sx={{
+                      fontFamily:
+                        'var(--font-lato), Helvetica, Arial, sans-serif',
+                      textTransform: 'uppercase',
+                      fontWeight: 700,
+                      fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+                      letterSpacing: '0.48em',
+                      color: 'text.primary',
+                      mb: 1.5,
+                    }}
+                  >
+                    {row.title}
+                  </Typography>
+                  <Box
+                    component='hr'
+                    aria-hidden
+                    sx={{
+                      border: 0,
+                      borderTop: '1px solid',
+                      borderColor: 'text.primary',
+                      m: 0,
+                      mb: 1.5,
+                      width: '100%',
+                    }}
+                  />
+                </Box>
+                <Typography
+                  component='p'
+                  sx={{
+                    fontFamily:
+                      'var(--font-lato), Helvetica, Arial, sans-serif',
+                    fontSize: { xs: '0.95rem', md: '1.05rem' },
+                    lineHeight: 1.6,
+                    color: 'text.secondary',
+                    m: 0,
+                  }}
+                >
+                  {row.description}
+                </Typography>
+              </Box>
+            );
+          }
+
+          const isFirstImageRow = rowIndex === firstImageRowIndex;
           const isMixed = row.type === 'mixed';
           const isLandscape = row.type === 'landscape';
 
@@ -204,7 +286,7 @@ export default function ImageGallery({ rows }: ImageGalleryProps) {
                       alt=''
                       fill
                       sizes={imageSizes(row.type, image)}
-                      priority={isFirstRow}
+                      priority={isFirstImageRow}
                       style={{ objectFit: 'cover' }}
                     />
                   </Box>

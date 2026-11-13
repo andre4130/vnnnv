@@ -23,6 +23,53 @@ type FooterProps = {
   backgroundSrc: string | null;
 };
 
+let scrollFrame = 0;
+
+function setScrollTop(value: number) {
+  document.documentElement.scrollTop = value;
+  document.body.scrollTop = value;
+}
+
+function scrollToTop() {
+  cancelAnimationFrame(scrollFrame);
+
+  const start = window.scrollY || document.documentElement.scrollTop;
+  if (start <= 0) {
+    return;
+  }
+
+  const reduceMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+  const root = document.documentElement;
+  const previousBehavior = root.style.scrollBehavior;
+  // Keep each frame instant. The page's own smooth-scroll setting
+  // otherwise swallows the steps and the jump looks abrupt.
+  root.style.scrollBehavior = 'auto';
+
+  if (reduceMotion) {
+    setScrollTop(0);
+    root.style.scrollBehavior = previousBehavior;
+    return;
+  }
+
+  const duration = Math.min(1400, Math.max(700, start / 12));
+  const startTime = performance.now();
+
+  const step = (now: number) => {
+    const progress = Math.min(1, (now - startTime) / duration);
+    const eased = 1 - (1 - progress) ** 3;
+    setScrollTop(Math.round(start * (1 - eased)));
+    if (progress < 1) {
+      scrollFrame = requestAnimationFrame(step);
+      return;
+    }
+    root.style.scrollBehavior = previousBehavior;
+  };
+
+  scrollFrame = requestAnimationFrame(step);
+}
+
 export default function Footer({ backgroundSrc }: FooterProps) {
   return (
     <Box
@@ -102,12 +149,27 @@ export default function Footer({ backgroundSrc }: FooterProps) {
         </Box>
 
         <Box
+          component='button'
+          type='button'
+          aria-label='Back to top'
+          onClick={scrollToTop}
           sx={{
             flexShrink: 0,
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
             gap: { xs: 1, sm: 1.25 },
+            p: 0,
+            m: 0,
+            border: 0,
+            bgcolor: 'transparent',
+            cursor: 'pointer',
+            color: 'inherit',
+            outline: 'none',
+            '&:focus-visible': {
+              outline: '1px solid #fff',
+              outlineOffset: 6,
+            },
           }}
         >
           <Box
